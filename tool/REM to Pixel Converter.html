@@ -1,0 +1,87 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>REM to Pixel Converter</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+</head>
+<body class="bg-gray-100 min-h-screen flex items-center justify-center p-4">
+    <div class="bg-white rounded-lg shadow-lg p-6 w-full max-w-md">
+        <h1 class="text-2xl font-bold text-gray-800 mb-6 text-center">REM to Pixel Converter</h1>
+        
+        <div class="mb-6">
+            <label for="basePixel" class="block text-sm font-medium text-gray-700 mb-2">Base Font Size (px)</label>
+            <input type="number" id="basePixel" value="16" 
+                   class="w-full px-4 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500">
+        </div>
+        
+        <div class="grid grid-cols-1 md:grid-cols-2 gap-4 mb-6">
+            <div>
+                <label for="remValue" class="block text-sm font-medium text-gray-700 mb-2">REM Value</label>
+                <input type="number" id="remValue" placeholder="Enter REM" step="0.01"
+                       class="w-full px-4 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500">
+            </div>
+            <div>
+                <label for="pixelValue" class="block text-sm font-medium text-gray-700 mb-2">Pixel Value</label>
+                <input type="number" id="pixelValue" placeholder="Enter Pixels" step="1"
+                       class="w-full px-4 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500">
+            </div>
+        </div>
+        
+        <div class="bg-blue-50 p-4 rounded-md mb-6">
+            <h2 class="text-lg font-semibold text-gray-800 mb-2">Result</h2>
+            <p id="resultText" class="text-gray-600">Enter values to convert</p>
+        </div>
+        
+        <button id="resetBtn" class="w-full bg-gray-200 hover:bg-gray-300 text-gray-800 font-medium py-2 px-4 rounded-md transition duration-200">
+            Reset
+        </button>
+    </div>
+
+    <script>
+        document.addEventListener('DOMContentLoaded', function() {
+            const basePixelInput = document.getElementById('basePixel');
+            const remInput = document.getElementById('remValue');
+            const pixelInput = document.getElementById('pixelValue');
+            const resultText = document.getElementById('resultText');
+            const resetBtn = document.getElementById('resetBtn');
+            
+            let basePixel = 16;
+            
+            // Update calculations when any input changes
+            function updateCalculations() {
+                basePixel = parseFloat(basePixelInput.value) || 16;
+                
+                // If REM input changed, calculate pixels
+                if (document.activeElement === remInput && remInput.value !== '') {
+                    const remValue = parseFloat(remInput.value);
+                    const pixelValue = remValue * basePixel;
+                    pixelInput.value = pixelValue.toFixed(2);
+                    resultText.textContent = `${remValue}rem = ${pixelValue.toFixed(2)}px (base ${basePixel}px)`;
+                } 
+                // If Pixel input changed, calculate REM
+                else if (document.activeElement === pixelInput && pixelInput.value !== '') {
+                    const pixelValue = parseFloat(pixelInput.value);
+                    const remValue = pixelValue / basePixel;
+                    remInput.value = remValue.toFixed(4);
+                    resultText.textContent = `${pixelValue}px = ${remValue.toFixed(4)}rem (base ${basePixel}px)`;
+                }
+            }
+            
+            // Event listeners
+            basePixelInput.addEventListener('input', updateCalculations);
+            remInput.addEventListener('input', updateCalculations);
+            pixelInput.addEventListener('input', updateCalculations);
+            
+            // Reset button
+            resetBtn.addEventListener('click', function() {
+                basePixelInput.value = 16;
+                remInput.value = '';
+                pixelInput.value = '';
+                resultText.textContent = 'Enter values to convert';
+            });
+        });
+    </script>
+</body>
+</html>
